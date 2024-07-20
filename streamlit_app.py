@@ -31,7 +31,7 @@ else:
 
     # Create a chat input field to allow the user to enter a message. This will display
     # automatically at the bottom of the page.
-    if prompt := st.chat_input("Ingresa tu duda..."):
+    if prompt := st.chat_input("Introduce tu duda aquí"):
 
         # Store and display the current prompt.
         st.session_state.messages.append({"role": "user", "content": prompt})
