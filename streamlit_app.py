@@ -42,7 +42,7 @@ else:
 
         # Generate a response using the OpenAI API.
         stream = client.chat.completions.create(
-            model="ft:gpt-3.5-turbo-1106:personal:sammyv5:9nIu2JmR",
+            model="ft:gpt-3.5-turbo-1106:personal:sammyv4:9l6xvHSn",
             messages=[
                 {"role": m["role"], "content": m["content"]}
                 for m in st.session_state.messages
