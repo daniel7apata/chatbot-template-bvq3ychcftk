@@ -1,9 +1,8 @@
 import streamlit as st
-from streamlit_chat import message
+
 
 from openai import OpenAI
 
-avatar_url = "https://i.ibb.co/KGJkFxV/ia-sammy-icono.jpg"
 # Show title and description.
 #st.title("Sammy")
 st.write(
@@ -57,5 +56,4 @@ else:
         # session state.
         with st.chat_message("assistant"):
             response = st.write_stream(stream)
-            message(response, avatar=avatar_url)
         st.session_state.messages.append({"role": "assistant", "content": response})
