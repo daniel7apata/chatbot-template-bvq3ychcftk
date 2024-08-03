@@ -2,7 +2,7 @@ import streamlit as st
 from openai import OpenAI
 
 # Show title and description.
-st.title("Sammy")
+#st.title("Sammy")
 st.write(
     "Hola, soy Sammy. Es un placer conocerte ¿en qué puedo ayudarte?"
 )
