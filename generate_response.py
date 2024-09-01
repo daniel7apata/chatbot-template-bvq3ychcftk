@@ -22,7 +22,7 @@ client = OpenAI(
         api_key=st.secrets["OPENAI_API_KEY"]
 )
 
-pinecone_client = Pinecone(api_key=st.secrets["PINECONE_API_KEY"])
+pinecone_client = Pinecone(api_key=st.secrets ["OPENAI_API_KEY"])
 index = pinecone_client.Index(INDEX_NAME)
 
 def get_relevant_documents(query):
