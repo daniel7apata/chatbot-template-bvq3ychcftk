@@ -27,7 +27,7 @@ st.write(
 openai_api_key = st.secrets ["OPENAI_API_KEY"]
 
 DATABASE_NAME = "vog-chatbot"
-BOT_INTRODUCTION = "Hola, soy Illa, encantada de conocerte. Estoy aquí para orientarte"
+BOT_INTRODUCTION = "Hola, soy Sammy. Es un placer conocerte ¿en qué puedo ayudarte?"
 
 if production:
     supabase: Client = create_client(
@@ -92,7 +92,7 @@ def main():
     
     if prompt := st.chat_input(
         key="prompt", 
-        placeholder="Cuéntame qué te sucedió durante la atención obstétrica o ginecológica"
+        placeholder="Ingresa tu duda aquí..."
     ):
         response_from_query()
 
