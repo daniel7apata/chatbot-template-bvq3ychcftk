@@ -28,12 +28,6 @@ else:
     # Create an OpenAI client.
     client = OpenAI(api_key=openai_api_key)
 
-    if prompt := st.chat_input(
-        key="prompt", 
-        placeholder="Cuéntame qué te sucedió"
-    ):
-        response_from_query()
-
     # Create a session state variable to store the chat messages. This ensures that the
     # messages persist across reruns.
     if "messages" not in st.session_state:
