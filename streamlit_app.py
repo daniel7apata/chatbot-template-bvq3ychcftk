@@ -11,7 +11,7 @@ Tu nombre es Sammy, y eres una asistente social virtual con una profunda especia
 
 # Show title and description.
 #st.title("Sammy")
-st.title("Hola, soy Sammy. Es un placer conocerte ¿en qué puedo ayudarte?")
+st.write("Hola, soy Sammy. Es un placer conocerte ¿en qué puedo ayudarte?")
 
 
 # Ask user for their OpenAI API key via `st.text_input`.
