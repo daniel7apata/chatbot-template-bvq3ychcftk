@@ -3,6 +3,16 @@ import streamlit as st
 
 from openai import OpenAI
 
+import openai
+import streamlit as st
+import os
+from html_template import *
+from generate_response import classification_prompt, generate_response
+from supabase import create_client, Client
+import uuid
+import time
+from env_type import production
+
 # Show title and description.
 #st.title("Sammy")
 st.write(
@@ -16,44 +26,75 @@ st.write(
 #openai_api_key = st.text_input("OpenAI API Key", type="password")
 openai_api_key = st.secrets ["OPENAI_API_KEY"]
 
-if not openai_api_key:
-    st.info("Please add your OpenAI API key to continue.", icon="🗝️")
-else:
+DATABASE_NAME = "vog-chatbot"
+BOT_INTRODUCTION = "Hola, soy Illa, encantada de conocerte. Estoy aquí para orientarte"
 
-    # Create an OpenAI client.
-    client = OpenAI(api_key=openai_api_key)
+if production:
+    supabase: Client = create_client(
+    st.secrets["SUPABASE_URL"],
+    st.secrets["SUPABASE_KEY"]
+    )
 
-    # Create a session state variable to store the chat messages. This ensures that the
-    # messages persist across reruns.
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
+def insert_data(uuid, message, table = DATABASE_NAME):
+    data = {"uuid": uuid, "role": message["role"], "content": message["content"]}
+    row_insert = supabase.table(table).insert(data)
+    return row_insert
 
-    # Display the existing chat messages via `st.chat_message`.
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
+def session_id():
+    return str(uuid.uuid4())
+
+def write_message(message):
+    if message["role"] == "user":
+        with st.chat_message("user", avatar=USER_AVATAR):
+            st.write(message["content"])
+    elif message["role"] == "assistant":
+        with st.chat_message("user", avatar=BOT_AVATAR):
             st.markdown(message["content"])
 
-    # Create a chat input field to allow the user to enter a message. This will display
-    # automatically at the bottom of the page.
-    if prompt := st.chat_input("Introduce tu duda aquí"):
+def response_from_query():
+    if st.session_state.prompt == "":
+        return
 
-        # Store and display the current prompt.
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
+    for message in st.session_state.history:
+        write_message(message)
 
-        # Generate a response using the OpenAI API.
-        stream = client.chat.completions.create(
-            model="ft:gpt-3.5-turbo-0125:personal:sammyv6b350125:9nVWDYcA",
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
-            stream=True,
-        )
+    with st.chat_message("user", avatar=USER_AVATAR):
+        st.write(st.session_state.prompt)
+    messages = st.session_state.history
 
-        # Stream the response to the chat using `st.write_stream`, then store it in 
-        # session state.
-        with st.chat_message("assistant"):
-            response = st.write_stream(stream)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+    messages, response = generate_response(st.session_state.prompt, messages)
+    st.session_state.history = messages
+
+    with st.chat_message("assistant", avatar=BOT_AVATAR):
+        assistant_message = st.write_stream(response)
+    
+    st.session_state.history.append(
+        {"role": "assistant", "content": assistant_message}
+    )
+    messages = st.session_state.history
+    if production:
+        insert_data(st.session_state.session_id, messages[-2]).execute()
+        insert_data(st.session_state.session_id, messages[-1]).execute()
+
+def main():
+
+    if "session_id" not in st.session_state:
+        st.session_state.session_id = session_id()
+        
+    if "history" not in st.session_state:
+        st.session_state.history = [{'role': 'system', 'content': classification_prompt}]
+
+    if "stream" not in st.session_state:
+        st.session_state.stream = None
+    
+    with st.chat_message("assistant", avatar=BOT_AVATAR):
+        st.write(BOT_INTRODUCTION)
+    
+    if prompt := st.chat_input(
+        key="prompt", 
+        placeholder="Cuéntame qué te sucedió durante la atención obstétrica o ginecológica"
+    ):
+        response_from_query()
+
+if __name__ == "__main__":
+    main()
