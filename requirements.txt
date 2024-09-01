@@ -1,2 +1,7 @@
-streamlit
 openai
+tiktoken
+pypdf
+pinecone-client
+langchain
+streamlit
+supabase
