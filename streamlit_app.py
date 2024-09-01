@@ -29,11 +29,7 @@ openai_api_key = st.secrets ["OPENAI_API_KEY"]
 DATABASE_NAME = "vog-chatbot"
 BOT_INTRODUCTION = "Hola, soy Sammy. Es un placer conocerte ¿en qué puedo ayudarte?"
 
-if production:
-    supabase: Client = create_client(
-    st.secrets["SUPABASE_URL"],
-    st.secrets["SUPABASE_KEY"]
-    )
+Client = OpenAI(api_key=openai_api_key)
 
 def insert_data(uuid, message, table = DATABASE_NAME):
     data = {"uuid": uuid, "role": message["role"], "content": message["content"]}
