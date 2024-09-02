@@ -52,8 +52,8 @@ else:
 
         # Generate a response using the OpenAI API.
         stream = client.chat.completions.create(
-            #model="ft:gpt-3.5-turbo-0125:personal:sammyv6b350125:9nVWDYcA",
-            model="ft:gpt-4o-mini-2024-07-18:personal:sammyv8:A2ospTCd",
+            model="ft:gpt-3.5-turbo-0125:personal:sammyv6b350125:9nVWDYcA",
+            #model="ft:gpt-4o-mini-2024-07-18:personal:sammyv8:A2ospTCd",
             messages=[
                 {"role": m["role"], "content": m["content"]}
                 for m in st.session_state.messages
