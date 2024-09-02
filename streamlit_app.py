@@ -28,7 +28,7 @@ Tu nombre es Sammy, y eres una asistente social virtual con una profunda especia
 
 def generate_response(query, messages):
     messages += [{'role': 'user', 'content': query}]
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="ft:gpt-3.5-turbo-0125:personal:sammyv6b350125:9nVWDYcA",
         messages=messages,
         stream=True
