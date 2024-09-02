@@ -71,7 +71,7 @@ def main():
     
     if prompt := st.chat_input(
         key="prompt", 
-        placeholder="Cuéntame qué te sucedió durante la atención obstétrica o ginecológica"
+        placeholder="Ingresa tu duda aqui..."
     ):
         response_from_query()
 
